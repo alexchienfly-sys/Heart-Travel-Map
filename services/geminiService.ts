@@ -2,7 +2,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { TravelSpot, ArchetypeId } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const ai = new GoogleGenAI({ 
+  apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' 
+});
 
 export const getTravelRecommendations = async (archetypeId: ArchetypeId): Promise<TravelSpot[]> => {
   const prompt = `根據旅人特徵 "${archetypeId}"，推薦 4 個台灣的私房秘境景點（必須是真實存在但較少人知的地點）。
