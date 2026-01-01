@@ -33,10 +33,17 @@ const Dashboard: React.FC<DashboardProps> = ({ archetype, onReset }) => {
         setTimeValues(prev => ({ ...prev, [spot.id]: 1 }));
         
         try {
-          const [pImg, nImg] = await Promise.all([
-            generateSpotImageVariant(spot.name, spot.location, 'PRESENT'),
-            generateSpotImageVariant(spot.name, spot.location, 'NIGHT')
-          ]);
+          // 1. 先抓日間圖
+const pImg = await generateSpotImageVariant(spot.name, spot.location, 'PRESENT');
+
+// 2. 停頓 2 秒 (讓 API 休息)
+await new Promise(resolve => setTimeout(resolve, 2000));
+
+// 3. 再抓星空圖
+const nImg = await generateSpotImageVariant(spot.name, spot.location, 'NIGHT');
+
+// 4. 再次停頓 2 秒，準備處理下一個景點
+await new Promise(resolve => setTimeout(resolve, 2000));
           
           setSpots(prev => prev.map(s => s.id === spot.id ? { 
             ...s, 
